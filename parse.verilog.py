@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 import sys
 import csv
+
 from vsrc.Vsrc import Vsrc
-from vsrc.Vsrc import Wapvsrc
+from vsrc.Wapvsrc import Wapvsrc
 
 
 def argsparse(args):
@@ -47,23 +48,8 @@ if __name__ == '__main__':
     for v in ls_vsrc:
         dict_vsrc[v.module_name] = v
     top_vsrc = Wapvsrc(top_vsrc, dict_vsrc)
+    csv_ = top_vsrc.get_wire_table_csv()
 
-    for input_port in top_vsrc.ls_input_port:
-        for inst in top_vsrc.dict_instance.keys():
-            module_name = top_vsrc.dict_instance[inst] 
-            port = top_vsrc.dict_wire_table[inst]["in"].get(input_port,"NotFound")
-            if  port != "NotFound":
-                print "input." + input_port + "," + input_port + "," + inst + ":" + module_name +  port  
-
-    for inst in top_vsrc.dict_instance.keys():
-        module_name = top_vsrc.dict_instance[inst] 
-        for output in top_vsrc.dict_wire_table[inst]["out"].keys():
-            port = top_vsrc.dict_wire_table[inst]["out"][output]
-            if  top_vsrc.ls_output_port.count(output) > 0:
-                print inst+ ":" + module_name + port + "," + output + "," + "output." + output
-            for inst_other in [i for i in top_vsrc.dict_instance.keys() if i != inst]:
-                module_name_other = top_vsrc.dict_instance[inst_other] 
-                port_other = top_vsrc.dict_wire_table[inst_other]["in"].get(output,"NotFound")
-                if port_other != "NotFound":
-                    print inst+ ":" + module_name + port + "," + output + "," + \
-                        inst_other + ":" + module_name_other + port_other
+    with open(top_module_name + '_tabel.csv', 'w') as fp:
+        writer = csv.writer(fp, lineterminator='\n')
+        writer.writerows(csv_)
