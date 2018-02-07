@@ -58,3 +58,16 @@ def trans_vsrc_to_ls2d(vsrc):
     vsrc = [reptn(r"\s+$").sub("",x) for x in vsrc]
     vsrc = [reptn(r"\s").split(x) for x in vsrc]
     return vsrc
+
+def is_input_port(vsrc, str_):
+    ls_port = ["." + reptn(r"\[.*\]").sub("", i) for i in vsrc.ls_input_port]
+    if len([s for s in [i for i in ls_port] if s == str_]) > 0:
+        return True
+    else:
+        return False
+def is_output_port(vsrc, str_):
+    ls_port = ["." + reptn(r"\[.*\]").sub("", i) for i in vsrc.ls_output_port]
+    if len([s for s in [i for i in ls_port] if s == str_]) > 0:
+        return True
+    else:
+        return False

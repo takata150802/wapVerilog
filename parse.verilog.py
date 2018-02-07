@@ -54,7 +54,7 @@ if __name__ == '__main__':
             port = top_vsrc.dict_wire_table[inst]["in"].get(input_port,"NotFound")
             if  port != "NotFound":
                 print "input." + input_port + "," + input_port + "," + inst + ":" + module_name +  port  
-    
+
     for inst in top_vsrc.dict_instance.keys():
         module_name = top_vsrc.dict_instance[inst] 
         for output in top_vsrc.dict_wire_table[inst]["out"].keys():
@@ -67,4 +67,3 @@ if __name__ == '__main__':
                 if port_other != "NotFound":
                     print inst+ ":" + module_name + port + "," + output + "," + \
                         inst_other + ":" + module_name_other + port_other
-                

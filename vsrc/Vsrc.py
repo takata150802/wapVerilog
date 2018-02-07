@@ -26,7 +26,8 @@ class Vsrc:
                     i = 1
                     while (s[i]!="]"):
                         i = i + 1
-                    ls_.append(s[i+1])
+                    range_ = reduce(lambda x, y : x + y, s[1:i+1])
+                    ls_.append(s[i+1]+range_)
                 else:
                     ls_.append(s[1])
         return ls_
@@ -38,7 +39,8 @@ class Vsrc:
                     i = 1
                     while (s[i]!="]"):
                         i = i + 1
-                    ls_.append(s[i+1])
+                    range_ = reduce(lambda x, y : x + y, s[1:i+1])
+                    ls_.append(s[i+1]+range_)
                 else:
                     ls_.append(s[1])
         return ls_
@@ -50,7 +52,8 @@ class Vsrc:
                     i = 1
                     while (s[i]!="]"):
                         i = i + 1
-                    ls_.append(s[i+1])
+                    range_ = reduce(lambda x, y : x + y, s[1:i+1])
+                    ls_.append(s[i+1]+range_)
                 else:
                     ls_.append(s[1])
         return ls_
@@ -88,10 +91,8 @@ class Wapvsrc(Vsrc):
         self.dict_wire_table = self.init_dict_wire_table()
     def __mask_dict_instance(self, vsrc, dict_vsrc):
         dict_ = {}
-        print vsrc.dict_instance
         for key in vsrc.dict_instance.keys():
             value = vsrc.dict_instance[key]
-            print key, value
             if len([m for m in dict_vsrc.keys() if m == value]) > 0:
                 dict_[key] = value
         return dict_
@@ -102,15 +103,17 @@ class Wapvsrc(Vsrc):
             dict_[iname] = self.__gen_wire_table(vsrc, self.dict_statement[iname])
         return dict_
     def __gen_wire_table(self, vsrc, stat):
+        from constructor_funcs import is_input_port
+        from constructor_funcs import is_output_port
         wire_table = {}
         in_wire_table = {}
         out_wire_table = {}     
         io_wire_table = self.__gen_io_wire_table(stat)
         for wire in io_wire_table.keys():
             port = io_wire_table[wire]
-            if self.__is_input_port(vsrc,port):
+            if is_input_port(vsrc,port):
                 in_wire_table[wire] = port
-            elif self.__is_output_port(vsrc,port):
+            elif is_output_port(vsrc,port):
                 out_wire_table[wire] = port
             else:
                 assert False
@@ -122,31 +125,25 @@ class Wapvsrc(Vsrc):
         assert stat[0] == "("
         assert stat[-1] ==")"
         stat = stat[1:-1]
-        p = "port"
-        value = ""
+        current = "port"
+        key = "" ### wire name
+        value = "" ### prot name
         for s in stat:
-            if p == "port":
+            if current == "port":
                 value = s
-                p = "("
-            elif p == "(":
-                p = "wire"
-            elif p == "wire":
-                io_wire_table[s]= value
-                value = ""
-                p = ")"
-            elif p == ")":
-                p = "port"
+                current = "("
+            elif current == "(":
+                current = "wire"
+            elif current == "wire":
+                if s == ")":
+                    io_wire_table[key]= value
+                    key = value = ""
+                    current = "port"
+                else:
+                    key += s
+            else:
+                assert False
         return io_wire_table
-    def __is_input_port(self, vsrc, str_):
-        if len([s for s in ["." + i for i in vsrc.ls_input_port] if s == str_]) > 0:
-            return True
-        else:
-            return False
-    def __is_output_port(self, vsrc, str_):
-        if len([s for s in ["." + i for i in vsrc.ls_output_port] if s == str_]) > 0:
-            return True
-        else:
-            return False
 
 if __name__ == '__main__':
     vsrc_txt = "" 
