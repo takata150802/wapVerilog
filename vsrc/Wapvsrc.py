@@ -68,6 +68,10 @@ class Wapvsrc(Vsrc):
                 current = "wire"
             elif current == "wire":
                 if s == ")":
+                    if io_wire_table.has_key(key):
+                        import sys
+                        print >> sys.stderr, "multiple use " + \
+                            key + " for port: " + io_wire_table[key] + ", " + value
                     io_wire_table[key]= value
                     key = value = ""
                     current = "port"
