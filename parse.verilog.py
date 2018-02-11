@@ -3,9 +3,8 @@
 import sys
 import csv
 
-from vsrc.Vsrc import Vsrc
-from vsrc.Wapvsrc import Wapvsrc
-
+from vsrc.Vmodule import Vmodule
+from vsrc.Vmodule import get_module_name_from_path
 
 def argsparse(args):
     assert len(args) >= 3,\
@@ -29,27 +28,36 @@ if __name__ == '__main__':
     """
     args = sys.argv
     top_module_name, ls_path_to_vsrc = argsparse(args)
-    ls_vsrc = []
-    for path_to_vsrc in ls_path_to_vsrc:
-        vsrc_txt = "" 
-        with open(path_to_vsrc,"r") as fp:
-            for line in fp:
-                vsrc_txt += line
-        ls_vsrc.append(Vsrc(vsrc_txt))
-            
-    ### モジュールが重複宣言されていないかチェック
-    assert are_there_duplication_1dlist( [v.module_name for v in ls_vsrc]) == True,\
-        "multiple definition of " "%s" % get_duplication_1dlist( [v.module_name for v in ls_vsrc])
     
-    ### topに指定されたモジュールを取得
-    top_vsrc = [v for v in ls_vsrc if v.module_name == top_module_name][0]
-    ls_vsrc.remove(top_vsrc)
-    dict_vsrc = {}
-    for v in ls_vsrc:
-        dict_vsrc[v.module_name] = v
-    top_vsrc = Wapvsrc(top_vsrc, dict_vsrc)
-    csv_ = top_vsrc.get_wire_table_csv()
+    ### モジュールが重複宣言されていないかチェック
+    assert are_there_duplication_1dlist( [get_module_name_from_path(v) for v in ls_path_to_vsrc]) == True,\
+        "multiple definition of " "%s" % get_duplication_1dlist( [get_module_name_from_path(v) for v in ls_path_to_vsrc])
+    ### top_module_nameに指定されたモジュールをインスタンス化
+    dict_path_to_vsrc = {}
+    for v in ls_path_to_vsrc:
+        dict_path_to_vsrc[get_module_name_from_path(v)] = v
+    path_to_vsrc_top = dict_path_to_vsrc.pop(top_module_name)
+    top = Vmodule(path_to_vsrc_top, dict_path_to_vsrc)
+#    ls_vmodule = []
+#    for path_to_vsrc in ls_path_to_vsrc:
+#        vsrc_txt = "" 
+#        with open(path_to_vsrc,"r") as fp:
+#            for line in fp:
+#                vsrc_txt += line
+#        print get_module_name(vsrc_txt)
+#        ls_vmodule.append(Vmodule(vsrc_txt))
+        
 
-    with open(top_module_name + '_tabel.csv', 'w') as fp:
-        writer = csv.writer(fp, lineterminator='\n')
-        writer.writerows(csv_)
+            
+#    ### topに指定されたモジュールを取得
+#    top_vsrc = [v for v in ls_vmodule if v.module_name == top_module_name][0]
+#    ls_vmodule.remove(top_vsrc)
+#    dict_vsrc = {}
+#    for v in ls_vmodule:
+#        dict_vsrc[v.module_name] = v
+#    top_vsrc = Wapvsrc(top_vsrc, dict_vsrc)
+#    csv_ = top_vsrc.get_wire_table_csv()
+#
+#    with open(top_module_name + '_tabel.csv', 'w') as fp:
+#        writer = csv.writer(fp, lineterminator='\n')
+#        writer.writerows(csv_)
