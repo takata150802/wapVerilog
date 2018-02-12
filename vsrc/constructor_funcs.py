@@ -86,10 +86,13 @@ def init_dict_module(dict_instance, dict_path_to_vsrc_submodules, level_ = ""):
     dict_module = {}
     for i in dict_instance.keys():
         m = dict_instance[i]
-        path = dict_path_to_vsrc_submodules[m]
-        level_arg = "" if level_ == "" else level_ + "."
-        level_arg = level_arg + i + ":" + m
-        dict_module[i] = Vmodule(path, dict_path_to_vsrc_submodules, level_arg)
+        path = dict_path_to_vsrc_submodules.get(m,"NotFound")
+        if path != "NotFound":
+            level_arg = "" if level_ == "" else level_ + "."
+            level_arg = level_arg + i + ":" + m
+            dict_module[i] = Vmodule(path, dict_path_to_vsrc_submodules, level_arg)
+        else:
+            pass
     return dict_module
     
 

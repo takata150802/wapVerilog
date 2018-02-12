@@ -1,8 +1,11 @@
-i0:m0.out0,->,->,output.out0
-i0:m0.out1,w1,w1,i1:m1.in0
-i1:m1.out0,out1,->,output.out1
-i1:m1.out1,w0[7:0],w0[7:0],i0:m0.in0
-input.clk,->,->,i0:m0.clk
-input.clk,->,->,i1:m1.clk
-input.in0[1:0],->,in0[1:0],i0:m0.in1
-input.in1,->,->,i1:m1.in1
+(I)clk,->,->,i0:m0(I)clk,->,i0:m0(I)clk,i0:m0.i1:m1(I)in0, , , 
+(I)clk,->,->,i1:m1(I)clk,->,->,i1:m1.i2:m2(I)clk, , , 
+(I)in0[1:0],->,(I)in0[1:0],i0:m0(I)in1[1:0], , , , , , 
+(I)in1,->,->,i1:m1(I)in1, , , , , , 
+i0:m0(C)1'h0,->,i0:m0(C)1'h0,i0:m0.i1:m1(I)in1, , , , , , 
+i0:m0(I)clk,->,->,i0:m0.i1:m1(I)clk,->,->,i0:m0.i1:m1.i2:m2(I)clk, , , 
+i0:m0.i1:m1(O)out1[7:0],->,->,i0:m0(O)out1[7:0],()open,->,()open, , , 
+i0:m0.i1:m1.i2:m2(O)out,i0:m0.i1:m1(O)out0,->,i0:m0.i1:m1(O)out0,->,->,i0:m0(O)out0,->,->,(O)out0
+i1:m1(O)out1[7:0],->,->,(O)out1[7:0], , , , , , 
+i1:m1(O)out1[7:0],->,(O)out1[7:0],i1:m1(I)in0, , , , , , 
+i1:m1.i2:m2(O)out,i1:m1(O)out0,->,i1:m1(O)out0,()open,->,()open, , , 

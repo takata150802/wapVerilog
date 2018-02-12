@@ -38,26 +38,11 @@ if __name__ == '__main__':
         dict_path_to_vsrc[get_module_name_from_path(v)] = v
     path_to_vsrc_top = dict_path_to_vsrc.pop(top_module_name)
     top = Vmodule(path_to_vsrc_top, dict_path_to_vsrc)
-#    ls_vmodule = []
-#    for path_to_vsrc in ls_path_to_vsrc:
-#        vsrc_txt = "" 
-#        with open(path_to_vsrc,"r") as fp:
-#            for line in fp:
-#                vsrc_txt += line
-#        print get_module_name(vsrc_txt)
-#        ls_vmodule.append(Vmodule(vsrc_txt))
-        
-
-            
-#    ### topに指定されたモジュールを取得
-#    top_vsrc = [v for v in ls_vmodule if v.module_name == top_module_name][0]
-#    ls_vmodule.remove(top_vsrc)
-#    dict_vsrc = {}
-#    for v in ls_vmodule:
-#        dict_vsrc[v.module_name] = v
-#    top_vsrc = Wapvsrc(top_vsrc, dict_vsrc)
-#    csv_ = top_vsrc.get_wire_table_csv()
-#
-#    with open(top_module_name + '_tabel.csv', 'w') as fp:
-#        writer = csv.writer(fp, lineterminator='\n')
-#        writer.writerows(csv_)
+    
+    ### 階層を再帰的に辿って接続関係をcsvに出力
+    csv_ = top.get_csv()
+    with open(top_module_name + '_tabel.csv', 'w') as fp:
+        writer = csv.writer(fp, lineterminator='\n')
+        writer.writerows(csv_)
+#    for l in csv_:
+#        print l

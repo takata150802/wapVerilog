@@ -91,3 +91,6 @@ def _parse_prot_wire_statement(stat):
         else:
             assert False
     return ls_
+    
+def get_name_range(str_):
+    return reptn(r".*\(.*\)").sub("",str_)

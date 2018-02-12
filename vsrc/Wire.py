@@ -21,6 +21,9 @@ class Input_port(Wire):
         self.is_used = False
         self.is_drived = False
         return
+    def get_str(self):
+        str_ = self.level + "(I)" + self.name + self.range
+        return str_
         
 class Output_port(Wire):
     def __init__(self, level_, name_, range_):
@@ -29,6 +32,9 @@ class Output_port(Wire):
         self.is_used = False
         self.is_drived = False
         return
+    def get_str(self):
+        str_ = self.level + "(O)" + self.name + self.range
+        return str_
         
 class Local_wire(Wire):
     def __init__(self, level_, name_, range_):
@@ -37,17 +43,24 @@ class Local_wire(Wire):
         self.is_used = False
         self.is_drived = False
         return
-
+    def get_str(self):
+        str_ = self.level + "(L)" + self.name + self.range
+        return str_
 class Constant_(Wire):
     def __init__(self, level_, name_):
         super(Constant_, self).__init__(level_, name_,"")
         self.type = "constant"
         self.is_used = True
         return
-
+    def get_str(self):
+        str_ = self.level + "(C)" + self.name + self.range
+        return str_
 class Open_(Wire):
     def __init__(self, level_):
         super(Open_, self).__init__(level_, "open","")
         self.type = "open"
         self.is_drived = True
         return
+    def get_str(self):
+        str_ = self.level + "()" + self.name + self.range
+        return str_
