@@ -112,7 +112,7 @@ class Vmodule:
                     print p.name, p.level
                     print p.get_str()
                 if w.type == "output" or w.type =="open" or w.type == "irregular":
-                    assert True or w.is_drived == False or w.type == "open" or w.type == "irregular", \
+                    assert w.is_drived == False or w.type == "open" or w.type == "irregular", \
                         w.get_str() + " has multi dirvers"
                     p.is_used = True
                     w.is_drived = True
@@ -142,7 +142,8 @@ class Vmodule:
                         if w == w_o:
                             p.is_drived = True
                             w.is_used = True
-                            w_o.is_drived = True
+                            if w_o.type != "output":
+                                w_o.is_drived = True
                             p_o.is_used = True
                             dict_["push"] = p_o
                             dict_["wire"] = w
