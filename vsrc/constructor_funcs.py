@@ -19,14 +19,24 @@ def init_ls_input_port(statement, level_ = ""):
     for s in statement:
         if s[0]=="input":
             name_ = range_ = ""
-            if s[1] == "[":
-                i = 1
-                while (s[i]!="]"):
-                    i = i + 1
-                range_ = reduce(lambda x, y : x + y, s[1:i+1])
-                name_ = s[i+1]
-            else:
-                name_ = s[1]
+            stat = "head"
+            for i in s:
+                if stat == "head":
+                    if i == s[0]:
+                        pass
+                    else:
+                        if i == "[":
+                            stat = "range"
+                            range_ += i
+                        else:
+                            stat = "head"
+                            name_ += i
+                elif stat == "range":
+                    range_ += i
+                    if i == "]":
+                        stat = "head"
+                else:
+                    assert False
             ls_.append(Input_port(level_, name_, range_))
     return ls_
 def init_ls_output_port(statement, level_ = ""):
@@ -35,14 +45,24 @@ def init_ls_output_port(statement, level_ = ""):
     for s in statement:
         if s[0]=="output":
             name_ = range_ = ""
-            if s[1] == "[":
-                i = 1
-                while (s[i]!="]"):
-                    i = i + 1
-                range_ = reduce(lambda x, y : x + y, s[1:i+1])
-                name_ = s[i+1]
-            else:
-                name_ = s[1]
+            stat = "head"
+            for i in s:
+                if stat == "head":
+                    if i == s[0]:
+                        pass
+                    else:
+                        if i == "[":
+                            stat = "range"
+                            range_ += i
+                        else:
+                            stat = "head"
+                            name_ += i
+                elif stat == "range":
+                    range_ += i
+                    if i == "]":
+                        stat = "head"
+                else:
+                    assert False
             ls_.append(Output_port(level_, name_, range_))
     return ls_
 def init_ls_local_wire(statement, level_ = ""):
@@ -51,14 +71,24 @@ def init_ls_local_wire(statement, level_ = ""):
     for s in statement:
         if s[0]=="wire":
             name_ = range_ = ""
-            if s[1] == "[":
-                i = 1
-                while (s[i]!="]"):
-                    i = i + 1
-                range_ = reduce(lambda x, y : x + y, s[1:i+1])
-                name_ = s[i+1]
-            else:
-                name_ = s[1]
+            stat = "head"
+            for i in s:
+                if stat == "head":
+                    if i == s[0]:
+                        pass
+                    else:
+                        if i == "[":
+                            stat = "range"
+                            range_ += i
+                        else:
+                            stat = "head"
+                            name_ += i
+                elif stat == "range":
+                    range_ += i
+                    if i == "]":
+                        stat = "head"
+                else:
+                    assert False
             ls_.append(Local_wire(level_, name_, range_))
     return ls_
 def init_dict_instance(statement):

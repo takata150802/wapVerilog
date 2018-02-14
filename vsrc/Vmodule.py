@@ -44,7 +44,11 @@ class Vmodule:
         return dict_
         
     def gen_port_wire_table_at_instance(self,instance):
+        import re
         from reptn_funcs import _parse_prot_wire_statement
+        from Wire import Open_
+        from Wire import Constant_
+        from Wire import Irregular
         table_ = {}
         table_['in'] = []
         table_['out'] = []
@@ -60,12 +64,12 @@ class Vmodule:
             if tmp == False:
                 tmp = self.__get_wire_from_list(port_wire['wire'], self.ls_local_wire)
             if tmp == False and port_wire['wire'] == "":
-                from Wire import Open_
                 tmp = Open_(self.level)
-            import re
             if tmp == False and re.compile("(\d*'s*[dhobDHOB][abcdefABCDEF\d]+)|\d+").match(port_wire['wire']):
-                from Wire import Constant_
                 tmp = Constant_(self.level, port_wire['wire']) 
+            if tmp == False:
+                print >> sys.stderr, self.level + " wire:" + port_wire['wire'] + " port:" + port_wire['port']
+                tmp = Irregular(self.level, port_wire['wire'])
             wire = tmp
             
             tmp = [p for p in self.dict_module[instance].ls_input_port if p.name == port_wire['port']]
@@ -103,8 +107,12 @@ class Vmodule:
             for port_wire in self.dict_port_wire_table[instance]['out']:
                 p = port_wire["port"]
                 w = port_wire["wire"]
-                if w.type == "output" or w.type =="open":
-                    assert w.is_drived == False or w.type == "open", \
+                if w == False:
+                    print p
+                    print p.name, p.level
+                    print p.get_str()
+                if w.type == "output" or w.type =="open" or w.type == "irregular":
+                    assert w.is_drived == False or w.type == "open" or w.type == "irregular", \
                         w.get_str() + " has multi dirvers"
                     p.is_used = True
                     w.is_drived = True
@@ -118,7 +126,7 @@ class Vmodule:
                 p = port_wire["port"]
                 w = port_wire["wire"]
                 ### top.input -> submodule.input
-                if w.type == "input" or w.type == "constant":
+                if w.type == "input" or w.type == "constant" or w.type == "irregular":
                     p.is_drived = True
                     w.is_used = True
                     dict_["push"] = w

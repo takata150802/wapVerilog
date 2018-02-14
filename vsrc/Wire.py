@@ -64,3 +64,13 @@ class Open_(Wire):
     def get_str(self):
         str_ = self.level + "()" + self.name + self.range
         return str_
+class Irregular(Wire):
+    def __init__(self, level_, name_):
+        super(Irregular, self).__init__(level_, name_,"")
+        self.type = "irregular"
+        self.is_used = True
+        self.is_drived = True
+        return
+    def get_str(self):
+        str_ = self.level + "(X)" + self.name + self.range
+        return str_
