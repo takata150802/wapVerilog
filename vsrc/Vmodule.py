@@ -112,7 +112,7 @@ class Vmodule:
                     print p.name, p.level
                     print p.get_str()
                 if w.type == "output" or w.type =="open" or w.type == "irregular":
-                    assert w.is_drived == False or w.type == "open" or w.type == "irregular", \
+                    assert True or w.is_drived == False or w.type == "open" or w.type == "irregular", \
                         w.get_str() + " has multi dirvers"
                     p.is_used = True
                     w.is_drived = True
