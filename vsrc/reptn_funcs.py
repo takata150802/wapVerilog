@@ -20,15 +20,18 @@ def trans_vsrc_to_ls2d(vsrc):
     ### //形式の1行コメントを削除
     vsrc = reptn(r"//.*\n").sub("\n", vsrc)
     ### /* */形式のコメントを削除
-    vsrc = reptn(r"`timescale.*\n").sub("\n", vsrc)
-    
-    ### delete line of timescale
     vsrc = reptn(r"/\*[\s\S]*?\*/").sub("", vsrc)
     
+    ### delete line of timescale
+    vsrc = reptn(r"`timescale.*\n").sub("\n", vsrc)
+
     assert len(reptn(r"^module\s|\smodule\s").findall(vsrc)) == 1 and \
         len(reptn(r"\sendmodule\s").findall(vsrc)) == 1, \
         "m(-_-)m 1Fileに複数のmodule宣言があるVerilogには非対応. 1 File per Unit.\n" \
         + vsrc[0:100]
+
+    ### generate ~ endgenerateを削除
+    vsrc = reptn(r"generate[\s\S]*?endgenerate").sub("", vsrc)
 
     ### begin end case endcaseの直後に;を付加
     vsrc = reptn(r"\sbegin\s").sub(" begin; ", vsrc)
